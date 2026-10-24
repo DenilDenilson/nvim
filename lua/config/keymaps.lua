@@ -35,9 +35,19 @@ end
 -- Essentials
 map("n", "<leader>w", "<cmd>w<cr>", { desc = "Guardar" })
 map("n", "<leader>q", "<cmd>q<cr>", { desc = "Salir" })
-map("n", "<leader>x", "<cmd>x<cr>", { desc = "Guardar y salir" })
+map("n", "<leader>wq", "<cmd>x<cr>", { desc = "Guardar y salir" })
 
-map("n", "<leader>e", "<cmd>Ex<cr>", { desc = "Explorer" })
+-- Lazygit vive en su propia pestaña; :q vuelve al código tras salir.
+map("n", "<leader>gg", function()
+  if vim.fn.executable("lazygit") ~= 1 then
+    vim.notify("Instala lazygit para usar este atajo", vim.log.levels.WARN)
+    return
+  end
+  local cwd = vim.fn.getcwd()
+  vim.cmd.tabnew()
+  vim.fn.jobstart({ "lazygit" }, { term = true, cwd = cwd })
+  vim.cmd.startinsert()
+end, { desc = "Abrir Lazygit" })
 
 map("n", "<leader>cf", function()
   require("conform").format({ async = true, lsp_format = "fallback" })

@@ -16,3 +16,18 @@ vim.opt.scrolloff = 4
 vim.opt.path:append("**")
 vim.opt.wildmenu = true
 vim.opt.wildmode = "longest:full,full"
+
+-- Recargar cambios externos únicamente cuando el buffer no tiene cambios locales.
+vim.opt.autoread = true
+local reload_group = vim.api.nvim_create_augroup("ReviewExternalChanges", { clear = true })
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "TermLeave" }, {
+  group = reload_group,
+  callback = function()
+    -- checktime puede posponerse durante un autocmd; ejecutarlo al volver al loop.
+    vim.schedule(function()
+      if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+        vim.cmd("checktime")
+      end
+    end)
+  end,
+})

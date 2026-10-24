@@ -1,6 +1,13 @@
 return {
   {
     "nvim-neotest/neotest",
+    keys = {
+      { "<leader>tt", function() require("neotest").run.run() end, desc = "Ejecutar test cercano" },
+      { "<leader>tf", function() require("neotest").run.run(vim.fn.expand("%")) end, desc = "Tests del archivo" },
+      { "<leader>ts", function() require("neotest").summary.toggle() end, desc = "Panel de tests" },
+      { "<leader>to", function() require("neotest").output_panel.toggle() end, desc = "Salida de tests" },
+      { "<leader>tS", function() require("neotest").run.stop() end, desc = "Detener tests" },
+    },
 
     dependencies = {
       "nvim-neotest/nvim-nio",
